@@ -110,7 +110,7 @@ properties:
             Describes the reason for a data access. Please refer to
             https://cloud.google.com/assured-workloads/key-access-justifications/docs/justification-codes
             for the detailed semantic meaning of justification reason codes.
-          values:
+          enum_values:
             - 'CUSTOMER_INITIATED_SUPPORT'
             - 'GOOGLE_INITIATED_SERVICE'
             - 'THIRD_PARTY_DATA_REQUEST'
