@@ -1,0 +1,18 @@
+resource "google_kms_folder_kaj_policy_config" "{{$.PrimaryResourceId}}" {
+	provider 				= google-beta
+	folder 					= google_folder.kaj_folder.id
+	default_key_access_justification_policy {
+		allowed_access_reasons = [
+			"CUSTOMER_INITIATED_ACCESS",
+			"GOOGLE_INITIATED_SYSTEM_OPERATION",
+		]
+	}
+	depends_on      = [google_folder.kaj_folder]
+}
+
+resource "google_folder" "kaj_folder" {
+	provider     = google-beta
+	display_name = "{{index $.Vars "folder_name"}}"
+	parent       = "organizations/{{index $.TestEnvVars "org_id"}}"
+	deletion_protection = false
+}

@@ -57,18 +57,15 @@ custom_code:
 
 # Using a handwritten sweeper because of pre_delete.
 exclude_sweeper: true
-# TODO: add example
-#examples:
-#  - name: 'kms_autokey_config_all'
-#    primary_resource_id: 'example-autokeyconfig'
-#    min_version: 'beta'
-#    vars:
-#      folder_name: 'my-folder'
-#      key_project_name: 'key-proj'
-#    test_env_vars:
-#      org_id: 'ORG_ID'
-#      billing_account: 'BILLING_ACCT'
-#    external_providers: ["random", "time"]
+
+examples:
+  - name: 'kms_folder_kaj_policy_config_basic'
+    primary_resource_id: "example"
+    min_version: 'beta'
+    vars:
+      folder_name: 'my-folder'
+    test_env_vars:
+      org_id: 'ORG_ID'
 parameters:
   - name: 'folder'
     type: String

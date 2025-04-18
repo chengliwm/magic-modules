@@ -1,0 +1,98 @@
+package kms_test
+
+import (
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
+
+	"github.com/hashicorp/terraform-provider-google/google/acctest"
+	"github.com/hashicorp/terraform-provider-google/google/envvar"
+)
+
+{{- if ne $.TargetVersionName "ga" }}
+func TestAccKMSFolderKajPolicyConfig_update(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"org_id":        envvar.GetTestOrgFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckKMSFolderKajPolicyConfigDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccKMSFolderKajPolicyConfig_basic(context),
+			},
+			{
+				ResourceName:            "google_kms_folder_kaj_policy_config.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"folder"},
+			},
+			{
+				Config: testAccKMSFolderKajPolicyConfig_update(context),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply:	[]plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_kms_folder_kaj_policy_config.example", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_kms_folder_kaj_policy_config.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"folder"},
+			},
+		},
+	})
+}
+
+func testAccKMSFolderKajPolicyConfig_basic(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_kms_folder_kaj_policy_config" "example" {
+	provider 				= google-beta
+	folder 					= google_folder.kaj_folder.id
+	default_key_access_justification_policy {
+		allowed_access_reasons = [
+			"CUSTOMER_INITIATED_ACCESS",
+			"GOOGLE_INITIATED_SYSTEM_OPERATION",
+		]
+	}
+	depends_on      = [google_folder.kaj_folder]
+}
+
+resource "google_folder" "kaj_folder" {
+	provider     = google-beta
+	display_name = "tf-test-my-folder%{random_suffix}"
+	parent       = "organizations/%{org_id}"
+	deletion_protection = false
+}
+`, context)
+}
+
+func testAccKMSFolderKajPolicyConfig_update(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_kms_folder_kaj_policy_config" "example" {
+	provider 				= google-beta
+	folder 					= google_folder.kaj_folder.id
+	default_key_access_justification_policy {
+		allowed_access_reasons = [
+			"CUSTOMER_INITIATED_ACCESS",
+		]
+	}
+	depends_on      = [google_folder.kaj_folder]
+}
+
+resource "google_folder" "kaj_folder" {
+	provider     = google-beta
+	display_name = "tf-test-my-folder%{random_suffix}"
+	parent       = "organizations/%{org_id}"
+	deletion_protection = false
+}
+`, context)
+}
+{{- end }}

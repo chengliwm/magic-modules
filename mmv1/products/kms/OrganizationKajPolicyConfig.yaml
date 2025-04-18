@@ -49,23 +49,11 @@ timeouts:
   insert_minutes: 20
   update_minutes: 20
   delete_minutes: 20
-# TODO: add custom codes.
-#custom_code:
-#  constants: 'templates/terraform/constants/autokey_config_folder_diff.go.tmpl'
-#  pre_create: 'templates/terraform/pre_create/kms_autokey_config_folder.go.tmpl'
-#  pre_read: 'templates/terraform/pre_read/kms_autokey_config_folder.go.tmpl'
-#  pre_update: 'templates/terraform/pre_update/kms_autokey_config_folder.go.tmpl'
-#  pre_delete: 'templates/terraform/pre_delete/kms_autokey_config_folder.go.tmpl'
-#  post_create: 'templates/terraform/post_create/sleep.go.tmpl'
-#  post_update: 'templates/terraform/post_create/sleep.go.tmpl'
-#  test_check_destroy: 'templates/terraform/custom_check_destroy/kms_autokey_config.go.tmpl'
 
 examples:
   - name: 'kms_organization_kaj_policy_config_basic'
-    primary_resource_id: "organization_kaj_policy_config"
+    primary_resource_id: "example"
     min_version: 'beta'
-    vars:
-      allowed_access_reason: "[CUSTOMER_INITIATED_ACCESS, GOOGLE_INITIATED_SYSTEM_OPERATION]"
     test_env_vars:
       org_id: 'ORG_ID'
 parameters:
