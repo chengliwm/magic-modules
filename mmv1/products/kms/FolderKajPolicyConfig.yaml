@@ -81,11 +81,6 @@ parameters:
     # TODO: do I need this?
     diff_suppress_func: 'folderPrefixSuppress'
 properties:
-  - name: 'name'
-    type: String
-    description: |
-      The resource name for this FolderKajPolicyConfig
-      min_version: 'beta'
   - name: 'default_key_access_justification_policy'
     type: NestedObject
     description: |
