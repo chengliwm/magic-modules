@@ -1,0 +1,7 @@
+resource "google_kms_organization_kaj_policy_configs" "{{$.PrimaryResourceId}}" {
+	provider 				= google-beta
+	organization 				= "{{index $.TestEnvVars "org_id"}}"
+	default_key_access_justification_policy = {
+		allowed_access_reason = {{index $.Vars "allowed_access_reason"}}
+	}
+}

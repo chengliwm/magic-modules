@@ -12,12 +12,12 @@
 # limitations under the License.
 
 ---
-name: 'ProjectKajPolicyConfigs'
+name: 'ProjectKajPolicyConfig'
 api_resource_type_kind: KeyAccessJustificationsPolicyConfig
 api_variant_patterns:
   - 'projects/{project}/kajPolicyConfig'
 description: |
-  `ProjectKajPolicyConfigs` is a project-level singleton resource
+  `ProjectKajPolicyConfig` is a project-level singleton resource
   used to configure the default KAJ policy of newly created key.
 
   ~> **Note:** AutokeyConfigs cannot be deleted from Google Cloud Platform.

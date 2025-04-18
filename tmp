@@ -1,0 +1,54 @@
+package resource_kms_organization_kaj_policy_configs
+
+import (
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+
+	"github.com/hashicorp/terraform-provider-google/google/acctest"
+	"github.com/hashicorp/terraform-provider-google/google/envvar"
+)
+
+func TestAccKmsOrganizationKajPolicyConfigs(t *testing.T) {
+	t.Parallel()
+	context := map[string]interface{}{
+		"org_id":	envvar.GetTestOrgTargetFromEnv(t),
+		"allowed_access_reason": "CUSTOMER_INITIATED_ACCESS",
+	}
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:			func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories:	acctest.ProtoV5ProviderFactories(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccKmsOrganizationKajPolicyConfig_full(context),
+			},
+			{
+				ResourceName:	"google_kms_organization_kaj_policy_configs",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+			{
+				Config: testAccKmsOrganizationKajPolicyConfig_full(context),
+			},
+			{
+				ResourceName:	"google_kms_organization_kaj_policy_configs",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccKmsOrganizationKajPolicyConfig_full(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_kms_organization_kaj_policy_configs" "example" {
+	provider = google-beta
+	organization	= "%{org_id}"
+	default_key_access_justification_policy {
+		allowed_access_reasons = ["%{allowed_access_reason}"]
+	}
+}
+	`, context);
+}

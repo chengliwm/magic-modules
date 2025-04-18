@@ -12,15 +12,15 @@
 # limitations under the License.
 
 ---
-name: 'OrganizationKajPolicyConfigs'
+name: 'OrganizationKajPolicyConfig'
 api_resource_type_kind: KeyAccessJustificationsPolicyConfig
 api_variant_patterns:
   - 'organizations/{organization}/kajPolicyConfig'
 description: |
-  `OrganizationKajPolicyConfigs` is a organization-level singleton resource
+  `OrganizationKajPolicyConfig` is a organization-level singleton resource
   used to configure the default KAJ policy of newly created key.
 
-  ~> **Note:** AutokeyConfigs cannot be deleted from Google Cloud Platform.
+  ~> **Note:** OrganizationKajPolicyConfig cannot be deleted from Google Cloud Platform.
   Destroying a Terraform-managed AutokeyConfig will remove it from state but
   *will not delete the resource from the project.*
 min_version: 'beta'
@@ -60,20 +60,14 @@ timeouts:
 #  post_update: 'templates/terraform/post_create/sleep.go.tmpl'
 #  test_check_destroy: 'templates/terraform/custom_check_destroy/kms_autokey_config.go.tmpl'
 
-# Using a handwritten sweeper because of pre_delete.
-exclude_sweeper: true
-# TODO: add example
-#examples:
-#  - name: 'kms_autokey_config_all'
-#    primary_resource_id: 'example-autokeyconfig'
-#    min_version: 'beta'
-#    vars:
-#      folder_name: 'my-folder'
-#      key_project_name: 'key-proj'
-#    test_env_vars:
-#      org_id: 'ORG_ID'
-#      billing_account: 'BILLING_ACCT'
-#    external_providers: ["random", "time"]
+examples:
+  - name: 'kms_organization_kaj_policy_config_basic'
+    primary_resource_id: "organization_kaj_policy_config"
+    min_version: 'beta'
+    vars:
+      allowed_access_reason: "[CUSTOMER_INITIATED_ACCESS, GOOGLE_INITIATED_SYSTEM_OPERATION]"
+    test_env_vars:
+      org_id: 'ORG_ID'
 parameters:
   - name: 'organization'
     type: String
@@ -83,8 +77,6 @@ parameters:
     url_param_only: true
     required: true
     immutable: true
-    # TODO: do I need this?
-    diff_suppress_func: 'folderPrefixSuppress'
 properties:
   - name: 'default_key_access_justification_policy'
     type: NestedObject
