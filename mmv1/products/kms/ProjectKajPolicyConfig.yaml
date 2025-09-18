@@ -15,40 +15,41 @@
 name: 'ProjectKajPolicyConfig'
 api_resource_type_kind: KeyAccessJustificationsPolicyConfig
 api_variant_patterns:
-  - 'projects/{project}/kajPolicyConfig'
+  - 'projects/{{project}}/kajPolicyConfig'
 description: |
   `ProjectKajPolicyConfig` is a project-level singleton resource
   used to configure the default KAJ policy of newly created key.
 
-  ~> **Note:** AutokeyConfigs cannot be deleted from Google Cloud Platform.
-  Destroying a Terraform-managed AutokeyConfig will remove it from state but
-  *will not delete the resource from the project.*
+  ~> **Note:**  ProjectKajPolicyConfig cannot be deleted from Google Cloud Platform.
+  Destroying a Terraform-managed  ProjectKajPolicyConfig will remove it from state but
+  *will not delete the resource from Google Cloud Platform.*
 min_version: 'beta'
-# TODO: add doc links once available.
 references:
   guides:
-    'Creating CryptoKeys with KAJ default policy': 'TODO - add doc link once available'
-  api: 'TODO - add link once available'
+    'Set default Key Access Justifications policy': 'https://cloud.google.com/assured-workloads/key-access-justifications/docs/set-default-policy'
+  api: 'https://cloud.google.com/kms/docs/reference/rest/v1/KeyAccessJustificationsPolicyConfig'
 docs:
-id_format: 'projects/{project}/kajPolicyConfig'
-base_url: 'projects/{project}/kajPolicyConfig'
-self_link: 'projects/{project}/kajPolicyConfig'
+id_format: 'projects/{{project}}/kajPolicyConfig'
+base_url: 'projects/{{project}}/kajPolicyConfig'
+self_link: 'projects/{{project}}/kajPolicyConfig'
 # This is a singleton resource that is already created, so create
 # is really an update, and therefore should be PATCHed.
 create_url: 'projects/{{project}}/kajPolicyConfig?updateMask=defaultKeyAccessJustificationPolicy'
 create_verb: 'PATCH'
 update_url: 'projects/{{project}}/kajPolicyConfig?updateMask=defaultKeyAccessJustificationPolicy'
 update_verb: 'PATCH'
-# This is a singleton resource that cannot be deleted. Deletetion
-# means clear up existing policies.
-delete_url: 'projects/{{project}}/kajPolicyConfig?updateMask=defaultKeyAccessJustificationPolicy'
-delete_verb: 'PATCH'
+# This is a singleton resource that cannot be deleted.
+exclude_delete: true
+exclude_sweeper: true
 import_format:
-  - 'projects/{project}/kajPolicyConfig'
+  - 'projects/{{project}}/kajPolicyConfig'
 timeouts:
   insert_minutes: 20
   update_minutes: 20
   delete_minutes: 20
+custom_code:
+  post_create: 'templates/terraform/post_create/sleep_1_min.go.tmpl'
+  post_update: 'templates/terraform/post_create/sleep_1_min.go.tmpl'
 examples:
   - name: 'kms_project_kaj_policy_config_basic'
     primary_resource_id: 'example'
@@ -57,14 +58,14 @@ examples:
       project_id: 'PROJECT_NAME'
 parameters:
 properties:
-  - name: 'default_key_access_justification_policy'
+  - name: 'defaultKeyAccessJustificationPolicy'
     type: NestedObject
     description: |
       The default key access justification policy used when a CryptoKey is
       created in this project. This is only used when a Key Access Justifications
       policy is not provided in the CreateCryptoKeyRequest.
     properties:
-      - name: 'allowed_access_reasons'
+      - name: 'allowedAccessReasons'
         type: Array
         description: |
           A KeyAccessJustificationsPolicy specifies zero or more allowed
