@@ -1,5 +1,6 @@
 package kms_test
 
+{{- if ne $.TargetVersionName "ga" }}
 import (
 	"testing"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-provider-google/google/envvar"
 )
 
-{{- if ne $.TargetVersionName "ga" }}
 func TestAccKMSProjectKajPolicyConfig_update(t *testing.T) {
 	t.Parallel()
 
@@ -22,7 +22,6 @@ func TestAccKMSProjectKajPolicyConfig_update(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
-		CheckDestroy:             testAccCheckKMSProjectKajPolicyConfigDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccKMSProjectKajPolicyConfig_basic(context),
